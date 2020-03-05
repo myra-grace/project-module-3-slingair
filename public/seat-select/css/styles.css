@@ -94,6 +94,11 @@ input {
     padding: 0 12px;
 }
 
+.no-such-flight {
+    display: none;
+    padding: var(--page-padding);
+}
+
 .plane {
     background: #fff;
     margin: 24px 24px 0;

@@ -63,4 +63,5 @@ const flights = {
     ]
 }
 
-module.exports = { seats };
+// module.exports = { seats };
+module.exports = { flights };

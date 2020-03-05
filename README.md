@@ -43,3 +43,12 @@ This will start the server and make the static pages accessible via their endpoi
 ## Developer Notes
 
 There is a folder called `notes` that contains possible hints on what to do next...
+## ------------------------------------------------------------------------------------
+
+# MY NOTES
+window.location.href = '/sdfnaef/wjnvd.html'   --- instead of res.render or res.redirect
+
+## To-do
+- Retrieve Scott's flights database.
+- Push the info to BE to push to Scott's user data base array.
+- A database accessible with authentication that shows all active flights and the info of reserved seats.
