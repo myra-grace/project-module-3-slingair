@@ -1,16 +1,35 @@
 const flightInput = document.getElementById('flight');
 const seatsDiv = document.getElementById('seats-section');
 const confirmButton = document.getElementById('confirm-button');
-let notAflight = document.querySelector('.no-such-flight');
+let selectTag = document.getElementById('flight');
 
 let selection = '';
 
+fetch('/flights')
+    .then(result => {
+        return result.json()
+        console.log(result)
+    })
+    .then(flights => {
+        console.log('flights: ', flights);
+        flights.forEach((flight) => {
+        let dropdown = document.getElementById('flight');
+        let option = document.createElement('option');
+        option.innerText = `${flight}`;
+        option.value = `${flight}`;
+        dropdown.appendChild(option);
+        console.log(flight)
+        });
+})
+
 const renderSeats = (result) => {
+    let container = document.getElementById('seats-section');
+    container.innerHTML = '';
+
     console.log('Flight Seats: ', result);
-    if (result.status === "No such flight") {
-        notAflight.style.display = 'flex';
-    } else {
-        notAflight.style.display = 'none';
+    // if (result.status === "No such flight") {
+    //     notAflight.style.display = 'flex';
+    // } else {
         document.querySelector('.form-container').style.display = 'block';
 
         const alpha = ['A', 'B', 'C', 'D', 'E', 'F'];
@@ -33,7 +52,7 @@ const renderSeats = (result) => {
                     row.appendChild(seat);
                 }
             }
-        }
+        // }
         
         let seatMap = document.forms['seats'].elements['seat'];
         seatMap.forEach(seat => {
@@ -69,7 +88,6 @@ const toggleFormContent = (event) => {
     } else {
         console.log("xxxxxxxxxxxx Looking for your flight xxxxxxxxxxxx");
     }
-//--------------- FIGGURE OUT HOW TO PREVENT FROM CONTINUING TO SEATS PAGE INSTEAD OF CONSOLE.LOG -----------------
 //-----------------------------------------------------------------------------------------------------------------
 
     fetch(`/flight/${flightNumber}`)
@@ -78,6 +96,7 @@ const toggleFormContent = (event) => {
         })
         .then(result => {
             renderSeats(result);
+            
         })
 }
 
@@ -109,3 +128,5 @@ const handleConfirmSeat = (event) => {
 //firstname input.value in index.html
 
 flightInput.addEventListener('blur', toggleFormContent);
+
+//------------------------ DIDN'T GET TO DO USERS -------------------------

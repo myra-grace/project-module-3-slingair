@@ -3,12 +3,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-let flights = ""
 const rp = require('request-promise');
+let flights = ''
 
 const PORT = process.env.PORT || 8000;
 
-function rppp() {
+//--------------- GRABING FROM SCOTT'S DB ---------------
+function availableFlights() {
     let options = {
         uri: 'https://journeyedu.herokuapp.com/slingair/flights',
         headers: {
@@ -24,24 +25,46 @@ function rppp() {
         })
 };
 
+async function flightSeating(flightNumber) {
+    let flight = flightNumber;
+    let selection = {
+        uri: `https://journeyedu.herokuapp.com/slingair/flights/${flight}`,
+        headers: {
+            'User-Agent': 'Request-Promise',
+        },
+        json: true
+    };
+    let seats = await rp(selection);
+    console.log('flightSeating result: ', seats);
+    return seats
+}
+
+const scottsFlightsHandler = (req, res) => {
+    res.send(flights);
+}
+//--------------------------------------------------------
+
+
 // -------------HANDLERS------------
-const flightHandler = (req, res) => {
-    rppp();
+const flightHandler = async (req, res) => {
     let flightNumber = req.params.flightNumber;
-    console.log('xxxxxxxxx flightNumber xxxxxxxxxx: ', flightNumber);
 
-    let flightID = Object.keys(flights).find(flight => flight === flightNumber)
-        console.log('xxxxxxx flightID xxxxxxx: ', flightID);
+    let seats = await flightSeating(flightNumber);
+    console.log('seats: ', seats);
+    res.send({ flightSeats: seats[flightNumber] });
 
-        if (flightID == undefined) {
-            console.log("----------- There is no such flight -----------");
-            res.send({status: 'No such flight'});
-        } else {
-            console.log("----------- Present! -----------");
-            const flightSeats = flights[flightID]
-            console.log('flightSeats : ', flightSeats );
-            res.send({flightSeats: flightSeats});
-        }
+    // let flightID = flights.find(flight => flight === flightNumber)
+    //     console.log('xxxxxxx flightID xxxxxxx: ', flightID);
+
+    //     if (flightID == undefined) {
+    //         console.log("----------- There is no such flight -----------");
+    //         res.send({status: 'No such flight'});
+    //     } else {
+    //         console.log("----------- Present! -----------");
+    //         const flightSeats = flights[flightID]
+    //         console.log('flightSeats : ', flightSeats );
+    //         res.send({flightSeats: flightSeats});
+    //     }
 }
 
 const seatHandler = (req, res) => {
@@ -72,6 +95,9 @@ express()
     .get('/seat-select/:givenName/:surname/:email/:flight/:seat', seatHandler)
     .get('/flight/:flightNumber', flightHandler)
     // .get('/confirmed') should display a confirmation message to the user with the info that they entered on the previous screen.
+    .get('/flights', scottsFlightsHandler)
 
     .use((req, res) => res.send('Not Found'))
     .listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+    availableFlights();

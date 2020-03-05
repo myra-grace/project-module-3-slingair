@@ -49,5 +49,6 @@ There is a folder called `notes` that contains possible hints on what to do next
 window.location.href = '/sdfnaef/wjnvd.html'   --- instead of res.render or res.redirect
 
 ## To-do
-- Retrieve seat and user info with confirm button action and retrieve the info in BE to push to clientDataBase array.
+- Retrieve Scott's flights database.
+- Push the info to BE to push to Scott's user data base array.
 - A database accessible with authentication that shows all active flights and the info of reserved seats.
